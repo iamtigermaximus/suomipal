@@ -1,8 +1,11 @@
+import Hero from '@/components/Hero';
+import Footer from '@/components/Footer';
+
 export default function Home() {
   return (
     <main>
-      <h1>SuomiPal</h1>
-      <p>Bilingual support for Finnish businesses</p>
+      <Hero />
+      <Footer />
     </main>
   );
 }
