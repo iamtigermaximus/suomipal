@@ -137,7 +137,7 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
       });
 
       if (!response.ok) {
-        const err = await response.json();
+        const err = await response.json().catch(() => ({ error: 'Request failed' }));
         throw new Error(err.error || 'Request failed');
       }
 
@@ -187,10 +187,12 @@ export default function Chat({ isOpen, onClose }: ChatProps) {
         ),
       );
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Something went wrong. Please try again.';
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === assistantId
-            ? { ...msg, content: 'Sorry, something went wrong. Please try again.' }
+            ? { ...msg, content: errorMessage }
             : msg,
         ),
       );
