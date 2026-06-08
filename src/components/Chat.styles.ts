@@ -333,3 +333,61 @@ export const ModalCancel = styled.button`
     color: #1A1A1A;
   }
 `;
+
+// ---------------------------------------------------------------------------
+// Conversion path extras
+// ---------------------------------------------------------------------------
+export const SignupPromptDismiss = styled.button`
+  background: none;
+  border: none;
+  color: #9CA3AF;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px;
+  text-decoration: underline;
+
+  &:hover {
+    color: #4B5563;
+  }
+`;
+
+export const ModalError = styled.p`
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: #C62828;
+  margin: 0;
+`;
+
+export const ModalSuccessIcon = styled.div`
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #E8F5E9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #2E7D32;
+  margin: 0 auto;
+`;
+
+export const ModalSuccessTitle = styled.h2`
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #1A1A1A;
+  margin: 0;
+  text-align: center;
+`;
+
+export const ModalSuccessText = styled.p`
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #4B5563;
+  margin: 0;
+  text-align: center;
+`;
