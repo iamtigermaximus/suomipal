@@ -1,25 +1,25 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/debug — Test connectivity to Neon DB and check env vars
+// GET /api/debug — Test connectivity to Neon DB and DeepSeek API
 export async function GET(request: NextRequest) {
+  // Block in production — this endpoint exposes internal state
+  if (process.env.NODE_ENV === 'production') {
+    return Response.json({ error: 'Not found' }, { status: 404 });
+  }
+
   const results: Record<string, string> = {};
 
-  // 1. Check environment variables
+  // 1. Check environment variables (existence only — no prefixes)
   results['DATABASE_URL_exists'] = process.env.DATABASE_URL ? 'yes' : 'NO';
   results['DEEPSEEK_API_KEY_exists'] = process.env.DEEPSEEK_API_KEY ? 'yes' : 'NO';
   results['NEXT_PUBLIC_APP_URL'] = process.env.NEXT_PUBLIC_APP_URL || 'NOT SET';
 
-  // Mask the secrets for safe display
   if (process.env.DATABASE_URL) {
-    const dbUrl = process.env.DATABASE_URL;
-    results['DATABASE_URL_prefix'] = dbUrl.substring(0, 30) + '...';
-    results['DATABASE_URL_length'] = String(dbUrl.length);
+    results['DATABASE_URL_length'] = String(process.env.DATABASE_URL.length);
   }
   if (process.env.DEEPSEEK_API_KEY) {
-    const key = process.env.DEEPSEEK_API_KEY;
-    results['DEEPSEEK_API_KEY_prefix'] = key.substring(0, 8) + '...';
-    results['DEEPSEEK_API_KEY_length'] = String(key.length);
+    results['DEEPSEEK_API_KEY_length'] = String(process.env.DEEPSEEK_API_KEY.length);
   }
 
   // 2. Test database connectivity
@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
     const elapsed = Date.now() - start;
     results['db_connect'] = `OK (${elapsed}ms)`;
   } catch (error) {
-    results['db_connect'] = `FAILED: ${error instanceof Error ? error.message : String(error)}`;
+    console.error('DB connectivity test failed:', error);
+    results['db_connect'] = 'FAILED';
   }
 
   // 3. Test DeepSeek API connectivity
@@ -48,7 +49,8 @@ export async function GET(request: NextRequest) {
       results['deepseek_connect'] = 'SKIPPED (no API key)';
     }
   } catch (error) {
-    results['deepseek_connect'] = `FAILED: ${error instanceof Error ? error.message : String(error)}`;
+    console.error('DeepSeek connectivity test failed:', error);
+    results['deepseek_connect'] = 'FAILED';
   }
 
   return Response.json({
